@@ -1,5 +1,6 @@
 from redis.asyncio import Redis
 import asyncio
+from app.config.redis import r
 
 ''' 
     This is a background worker running for every 5 sec refreshing the arena, by adding users into it
@@ -8,21 +9,19 @@ import asyncio
 
 async def worker():
     
-    r = Redis(host="localhost", decode_responses=True, port=6379)
     q = "VirtualQueue"
 
+    print("Worker running for every 5 secs!!")
     while True:
 
         try:
             users = await r.zpopmin(q, 10)
             for user, score in users:
-                
                 print(f"Inserting user : {user}")
-                await r.hset(f'user:{user}', mapping={
-                    "IP": 1202
-                })
+                # Store user data in Redis hash
+                await r.hset(f'user:{user}', mapping={"IP": "1202"}) # Using IP for now
                 
-                # Setting 12 min Time limit
+                # Set expiration time (12 minutes)
                 await r.expire(f'user:{user}', 720)
                 print('Inserted and set TTL')
 
