@@ -4,7 +4,7 @@ from app.config.redis import r
 
 ''' 
     This is a background worker running for every 5 sec refreshing the arena, by adding users into it
-    Using hashes we set expiration time for the user which should update in the frontend too
+    Using hashes we set expiration time for the user which should update in the frontend too (later)
 '''
 
 async def worker():
@@ -18,9 +18,10 @@ async def worker():
             users = await r.zpopmin(q, 10)
             for user, score in users:
                 print(f"Inserting user : {user}")
-                # Store user data in Redis hash
-                await r.hset(f'user:{user}', mapping={"IP": "1202"}) # Using IP for now
                 
+                user_data = {"in_arena": "1"} # user moves to arena to book tickets and reserve
+                await r.hset(f'user:{user}', mapping=user_data)
+
                 # Set expiration time (12 minutes)
                 await r.expire(f'user:{user}', 720)
                 print('Inserted and set TTL')

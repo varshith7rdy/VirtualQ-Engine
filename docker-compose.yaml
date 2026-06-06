@@ -8,5 +8,20 @@ services:
     volumes:
       - redis_data:/data
 
+  postgres:
+    image: postgres:latest
+    container_name: PGDB
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+
 volumes:
   redis_data:
+  postgres_data:

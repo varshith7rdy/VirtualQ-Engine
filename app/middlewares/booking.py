@@ -1,6 +1,7 @@
 from redis.asyncio import Redis
 from fastapi import Request, Response
-from app.config.redis import r
+from ..config.redis import r
+from ..middlewares.auth import get_current_user_id
 
 async def BookingMiddleware(request: Request, call_next):
     
@@ -8,14 +9,14 @@ async def BookingMiddleware(request: Request, call_next):
 
     if path.startswith("/booking") == True:
 
-        user = request.headers.get("X-User-Id") 
+        user = get_current_user_id(request)
         if not user:
             return Response(content="Invalid user", status_code=400)
 
-        print(f'User: {user} exists and is allowed to the booking arena')
-        res = await r.hexists(f'user:{user}', 'IP')
+        res = await r.hexists(f'user:{user}', 'in_arena')
         if not res:
             return Response(content="Not allowed to book!", status_code=400)
+        print(f'User: {user} exists and is allowed to the booking arena')
 
     response = await call_next(request)
     return response

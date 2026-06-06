@@ -1,22 +1,23 @@
-# Docs code
-
 import asyncio
-from redis import Redis
+import asyncpg
+from ..config.db import engine, session
+from ..model import Event, Tickets
+
+def add_data():
+
+    db = session()
+    db.add(Tickets(id=102, eventid = 101, seat='west-tier', price = 5000))
+    db.commit()
 
 
-r = Redis(host="localhost", port=6379, decode_responses=True)
+def fetch_data():
 
-Queue = "VQ"
+    db = session()
+    res = db.query(Event).all()
+    for row in res:
+        print(row.id, row.name, row.description)
 
-res1 = r.zadd("racer_scores", {"Norem": 10})
-print(res1)
 
-res2 = r.zadd("racer_scores", {"Castilla": 12})
-print(res2) 
+# fetch_data()
 
-res3 = r.zadd(
-    "racer_scores",
-    {"Sam-Bodden": 8, "Royce": 10, "Ford": 6, "Prickett": 14, "Castilla": 12},
-)
-
-print(r.zrevrange("racer_scores", 0, -1, withscores=True))
+add_data()

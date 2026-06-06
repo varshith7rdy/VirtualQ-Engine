@@ -1,5 +1,7 @@
-/venv
+/.venv
 plan.md
 test.js
 __pycache__
 .env
+app/models/
+/tests
