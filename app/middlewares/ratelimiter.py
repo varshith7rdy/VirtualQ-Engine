@@ -21,8 +21,8 @@ class RateLimiter(BaseHTTPMiddleware):
 
         self.rate_limit[ip] = [t for t in self.rate_limit[ip] if current_time - t < 1.0]
 
-        # 5 request per Second
-        if len(self.rate_limit[ip]) >= 5:
+        # 100 request per Second
+        if len(self.rate_limit[ip]) >= 100:
             return Response(content="Rate Limit Exceeded", status_code=429)
         
         self.rate_limit[ip].append(current_time)

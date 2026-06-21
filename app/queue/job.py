@@ -3,7 +3,7 @@ import asyncio
 from app.config.redis import r
 
 ''' 
-    This is a background worker running for every 5 sec refreshing the arena, by adding users into it
+    This is a background worker running for every 30 sec refreshing the arena, by adding users into it
     Using hashes we set expiration time for the user which should update in the frontend too (later)
 '''
 
@@ -30,6 +30,6 @@ async def worker():
             print("Error occured!1")
             print(e)
         
-        await asyncio.sleep(5)
+        await asyncio.sleep(30) # runs for every 30 seconds
 
 asyncio.run(worker())

@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 
-from ..middlewares.ratelimiter import RateLimiter
+from app.middlewares.ratelimiter import RateLimiter
 from ..middlewares.booking import BookingMiddleware
 from ..middlewares.auth import AuthMiddleware, get_current_user_id, create_token
 from ..config.redis import r
@@ -115,7 +115,6 @@ async def get_arenausers():
 
 
 # Booking endpoints
-
 @app.post("/booking/reserve-seat/")
 async def reserve_seat(req: Book, request: Request, db: Session = Depends(get_db)):
     user_id = request.state.user_id
@@ -149,7 +148,6 @@ async def getSeatsForEventId(eventID: int, db: Session = Depends(get_db)):
         return res
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
 
 @app.post("/booking/book")
 async def bookseat(req: Book, request: Request, db: Session = Depends(get_db)):

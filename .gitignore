@@ -5,3 +5,5 @@ __pycache__
 .env
 app/models/
 /tests
+.vscode/
+.pytest_cache/
